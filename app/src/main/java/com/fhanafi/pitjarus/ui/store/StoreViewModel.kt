@@ -25,6 +25,9 @@ class StoreViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<UiState<List<StoreUiModel>>>(UiState.Loading)
     val uiState: StateFlow<UiState<List<StoreUiModel>>> = _uiState.asStateFlow()
 
+    private val _createState = MutableStateFlow<UiState<Unit>>(UiState.Idle)
+    val createState: StateFlow<UiState<Unit>> = _createState.asStateFlow()
+
     init {
         viewModelScope.launch {
             searchQuery
@@ -44,6 +47,9 @@ class StoreViewModel @Inject constructor(
 
     fun refresh(search: String = searchQuery.value) {
         viewModelScope.launch {
+            if (_uiState.value !is UiState.Success) {
+                _uiState.value = UiState.Loading
+            }
             when (val result = storeRepository.refreshStores(search)) {
                 is NetworkResult.Error -> if (_uiState.value !is UiState.Success) _uiState.value = UiState.Error(result.message)
                 is NetworkResult.Unauthorized -> _uiState.value = UiState.Unauthorized(result.message)
@@ -51,5 +57,45 @@ class StoreViewModel @Inject constructor(
                 else -> Unit
             }
         }
+    }
+
+    fun createStore(
+        code: String,
+        name: String,
+        address: String,
+        latitude: Double,
+        longitude: Double
+    ): String? {
+        if (_createState.value is UiState.Loading) return null
+        return when {
+            code.isBlank() -> "Kode toko wajib diisi"
+            name.isBlank() -> "Nama toko wajib diisi"
+            address.isBlank() -> "Alamat toko wajib diisi"
+            else -> {
+                viewModelScope.launch {
+                    _createState.value = UiState.Loading
+                    _createState.value = when (
+                        val result = storeRepository.createStore(
+                            code.trim(),
+                            name.trim(),
+                            address.trim(),
+                            latitude,
+                            longitude
+                        )
+                    ) {
+                        is NetworkResult.Success -> UiState.Success(Unit)
+                        is NetworkResult.Error -> UiState.Error(result.message)
+                        is NetworkResult.ValidationError -> UiState.Error(result.message)
+                        is NetworkResult.Unauthorized -> UiState.Unauthorized(result.message)
+                        NetworkResult.Loading -> UiState.Loading
+                    }
+                }
+                null
+            }
+        }
+    }
+
+    fun clearCreateState() {
+        _createState.value = UiState.Idle
     }
 }

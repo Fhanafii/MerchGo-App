@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -13,6 +12,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.fhanafi.pitjarus.databinding.FragmentLoginBinding
 import com.fhanafi.pitjarus.utils.UiState
+import com.fhanafi.pitjarus.utils.hideGlobalLoading
+import com.fhanafi.pitjarus.utils.showGlobalLoading
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -46,12 +48,19 @@ class LoginFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
-                    binding.loading.root.visibility = if (state is UiState.Loading) View.VISIBLE else View.GONE
+                    binding.loading.root.visibility = View.GONE
                     binding.buttonLogin.isEnabled = state !is UiState.Loading
+                    binding.inputUsername.isEnabled = state !is UiState.Loading
+                    binding.inputPassword.isEnabled = state !is UiState.Loading
+                    if (state is UiState.Loading) {
+                        showGlobalLoading("Signing in...")
+                    } else {
+                        hideGlobalLoading()
+                    }
                     when (state) {
-                        is UiState.Success -> findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToAttendanceFragment())
-                        is UiState.Error -> Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
-                        is UiState.Unauthorized -> Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                        is UiState.Success -> findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToWelcomeTransitionFragment())
+                        is UiState.Error -> Snackbar.make(binding.root, state.message, Snackbar.LENGTH_SHORT).show()
+                        is UiState.Unauthorized -> Snackbar.make(binding.root, state.message, Snackbar.LENGTH_SHORT).show()
                         else -> Unit
                     }
                 }

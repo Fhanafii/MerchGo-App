@@ -41,6 +41,19 @@ data class StoreDto(
     val isActive: Boolean = true
 )
 
+data class CreateStoreRequest(
+    val code: String,
+    val name: String,
+    val address: String,
+    val latitude: Double,
+    val longitude: Double
+)
+
+data class PendingCreateStoreRequest(
+    @SerializedName("local_id") val localId: Int,
+    val store: CreateStoreRequest
+)
+
 data class ProductDto(
     val id: Int,
     val barcode: String,
@@ -54,6 +67,29 @@ data class ProductDto(
     val createdAt: String? = null,
     val updatedAt: String? = null,
     val isActive: Boolean = true
+)
+
+data class CreateProductRequest(
+    val barcode: String,
+    val name: String,
+    val size: String,
+    val sku: String,
+    val price: Long
+)
+
+data class AssignProductRequest(
+    @SerializedName("product_ids") val productIds: List<Int>
+)
+
+data class CreateAndAssignProductRequest(
+    @SerializedName("store_id") val storeId: Int,
+    val product: CreateProductRequest,
+    @SerializedName("local_product_id") val localProductId: Int? = null
+)
+
+data class PendingAssignProductRequest(
+    @SerializedName("store_id") val storeId: Int,
+    @SerializedName("product_id") val productId: Int
 )
 
 data class AttendanceReportRequest(

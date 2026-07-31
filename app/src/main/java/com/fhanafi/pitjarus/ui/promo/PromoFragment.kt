@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -16,8 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.fhanafi.pitjarus.R
 import com.fhanafi.pitjarus.databinding.BottomSheetAddPromoBinding
 import com.fhanafi.pitjarus.databinding.FragmentPromoBinding
+import com.fhanafi.pitjarus.ui.model.ProductUiModel
 import com.fhanafi.pitjarus.utils.UiState
+import com.fhanafi.pitjarus.utils.hideGlobalLoading
+import com.fhanafi.pitjarus.utils.showGlobalLoading
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -28,6 +32,8 @@ class PromoFragment : Fragment() {
     private val viewModel: PromoViewModel by viewModels()
     private val args: PromoFragmentArgs by navArgs()
     private val adapter = PromoAdapter()
+    private var addPromoDialog: BottomSheetDialog? = null
+    private var addPromoBinding: BottomSheetAddPromoBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,21 +65,39 @@ class PromoFragment : Fragment() {
     }
 
     private fun showAddPromoDialog() {
+        val products = viewModel.products.value
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding = BottomSheetAddPromoBinding.inflate(layoutInflater)
+        addPromoDialog = dialog
+        addPromoBinding = sheetBinding
         dialog.setContentView(sheetBinding.root)
+        dialog.setOnDismissListener {
+            addPromoDialog = null
+            addPromoBinding = null
+        }
+        sheetBinding.dropdownProduct.setAdapter(
+            ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_list_item_1,
+                products.map { it.toPromoDisplayName() }
+            )
+        )
+        sheetBinding.dropdownProduct.threshold = 1
+        sheetBinding.dropdownProduct.inputType = android.text.InputType.TYPE_CLASS_TEXT
+        sheetBinding.textNoProducts.visibility = if (products.isEmpty()) View.VISIBLE else View.GONE
+        sheetBinding.buttonSave.isEnabled = products.isNotEmpty()
         sheetBinding.buttonCancel.setOnClickListener { dialog.dismiss() }
         sheetBinding.buttonSave.setOnClickListener {
             val error = viewModel.addPromo(
                 args.storeId,
-                sheetBinding.inputProductName.editText?.text?.toString().orEmpty(),
+                sheetBinding.dropdownProduct.text?.toString().orEmpty(),
                 sheetBinding.inputNormalPrice.editText?.text?.toString().orEmpty(),
                 sheetBinding.inputPromoPrice.editText?.text?.toString().orEmpty()
             )
             if (error == null) {
-                dialog.dismiss()
+                Unit
             } else {
-                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, error, Snackbar.LENGTH_SHORT).show()
             }
         }
         dialog.show()
@@ -88,26 +112,69 @@ class PromoFragment : Fragment() {
                             is UiState.Success -> {
                                 adapter.submitList(state.data)
                                 binding.emptyState.root.visibility = View.GONE
+                                hideGlobalLoading()
                             }
                             UiState.Empty -> {
                                 adapter.submitList(emptyList())
                                 binding.emptyState.root.visibility = View.VISIBLE
+                                hideGlobalLoading()
                             }
-                            is UiState.Error -> Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
-                            is UiState.Unauthorized -> Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
-                            else -> Unit
+                            UiState.Loading -> showGlobalLoading("Loading promos...")
+                            is UiState.Error -> {
+                                hideGlobalLoading()
+                                Snackbar.make(binding.root, state.message, Snackbar.LENGTH_SHORT).show()
+                            }
+                            is UiState.Unauthorized -> {
+                                hideGlobalLoading()
+                                Snackbar.make(binding.root, state.message, Snackbar.LENGTH_SHORT).show()
+                            }
+                            UiState.Idle -> Unit
                         }
                     }
                 }
                 launch {
                     viewModel.submitState.collect { state ->
                         binding.buttonSubmitPromo.isEnabled = state !is UiState.Loading
-                        if (state is UiState.Success) Toast.makeText(requireContext(), "Promo report berhasil dikirim", Toast.LENGTH_SHORT).show()
-                        if (state is UiState.Error) Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                        binding.fabAddPromo.isEnabled = state !is UiState.Loading
+                        if (state is UiState.Loading) showGlobalLoading("Saving promo...")
+                        if (state !is UiState.Loading) hideGlobalLoading()
+                        if (state is UiState.Success) Snackbar.make(binding.root, "Promo report berhasil dikirim", Snackbar.LENGTH_SHORT).show()
+                        if (state is UiState.Error) Snackbar.make(binding.root, state.message, Snackbar.LENGTH_SHORT).show()
+                    }
+                }
+                launch {
+                    viewModel.addState.collect { state ->
+                        val saving = state is UiState.Loading
+                        updateAddPromoSheetLoading(saving)
+                        when (state) {
+                            is UiState.Success -> {
+                                addPromoDialog?.dismiss()
+                                Snackbar.make(binding.root, "Promo berhasil ditambahkan", Snackbar.LENGTH_SHORT).show()
+                                viewModel.clearAddState()
+                            }
+                            is UiState.Error -> Snackbar.make(binding.root, state.message, Snackbar.LENGTH_SHORT).show()
+                            else -> Unit
+                        }
                     }
                 }
             }
         }
+    }
+
+    private fun updateAddPromoSheetLoading(loading: Boolean) {
+        addPromoDialog?.setCancelable(!loading)
+        addPromoBinding?.apply {
+            buttonSave.isEnabled = !loading && viewModel.products.value.isNotEmpty()
+            buttonCancel.isEnabled = !loading
+            inputProductName.isEnabled = !loading
+            inputNormalPrice.isEnabled = !loading
+            inputPromoPrice.isEnabled = !loading
+            buttonSave.text = getString(if (loading) R.string.saving_promo else R.string.save)
+        }
+    }
+
+    private fun ProductUiModel.toPromoDisplayName(): String {
+        return "${name} - ${barcode}"
     }
 
     override fun onDestroyView() {

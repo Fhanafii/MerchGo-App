@@ -48,6 +48,17 @@ class UserPreference @Inject constructor(
         }
     }
 
+    fun getAttendanceSession(): Flow<AttendanceSession> {
+        return context.dataStore.data.map { preferences ->
+            AttendanceSession(
+                checkedIn = preferences[ATTENDANCE_CHECKED_IN_KEY] ?: false,
+                checkedOut = preferences[ATTENDANCE_CHECKED_OUT_KEY] ?: false,
+                attendanceId = preferences[ATTENDANCE_ID_KEY],
+                checkInTime = preferences[ATTENDANCE_CHECK_IN_TIME_KEY]
+            )
+        }
+    }
+
     suspend fun saveSession(token: String, userId: Int, name: String, expiredAt: String) {
         context.dataStore.edit { preferences ->
             preferences[TOKEN_KEY] = token
@@ -70,6 +81,23 @@ class UserPreference @Inject constructor(
         }
     }
 
+    suspend fun saveAttendanceSession(session: AttendanceSession) {
+        context.dataStore.edit { preferences ->
+            preferences[ATTENDANCE_CHECKED_IN_KEY] = session.checkedIn
+            preferences[ATTENDANCE_CHECKED_OUT_KEY] = session.checkedOut
+            if (session.attendanceId == null) {
+                preferences.remove(ATTENDANCE_ID_KEY)
+            } else {
+                preferences[ATTENDANCE_ID_KEY] = session.attendanceId
+            }
+            if (session.checkInTime == null) {
+                preferences.remove(ATTENDANCE_CHECK_IN_TIME_KEY)
+            } else {
+                preferences[ATTENDANCE_CHECK_IN_TIME_KEY] = session.checkInTime
+            }
+        }
+    }
+
     suspend fun clearSession() {
         context.dataStore.edit { preferences ->
             preferences.clear()
@@ -83,5 +111,15 @@ class UserPreference @Inject constructor(
         val EXPIRED_AT_KEY = stringPreferencesKey("expired_at")
         val IS_LOGGED_IN_KEY = booleanPreferencesKey("is_logged_in")
         val ATTENDANCE_CHECKED_IN_KEY = booleanPreferencesKey("attendance_checked_in")
+        val ATTENDANCE_CHECKED_OUT_KEY = booleanPreferencesKey("attendance_checked_out")
+        val ATTENDANCE_ID_KEY = stringPreferencesKey("attendance_id")
+        val ATTENDANCE_CHECK_IN_TIME_KEY = stringPreferencesKey("attendance_check_in_time")
     }
 }
+
+data class AttendanceSession(
+    val checkedIn: Boolean = false,
+    val checkedOut: Boolean = false,
+    val attendanceId: String? = null,
+    val checkInTime: String? = null
+)

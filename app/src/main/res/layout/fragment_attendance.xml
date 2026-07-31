@@ -85,6 +85,16 @@
             app:icon="@drawable/ic_check" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonContinueWorking"
+            style="@style/Widget.Pitjarus.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_8"
+            android:text="@string/continue_working"
+            android:visibility="gone"
+            app:icon="@drawable/ic_store" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonCheckOut"
             style="@style/Widget.Pitjarus.OutlinedButton"
             android:layout_width="match_parent"

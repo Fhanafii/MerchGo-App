@@ -4,6 +4,7 @@ import com.fhanafi.pitjarus.data.api.ApiInterceptor
 import com.fhanafi.pitjarus.data.api.ApiService
 import com.fhanafi.pitjarus.data.api.RetrofitClient
 import com.fhanafi.pitjarus.BuildConfig
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,6 +16,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+    @Provides
+    @Singleton
+    fun provideGson(): Gson {
+        return Gson()
+    }
+
     @Provides
     @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {

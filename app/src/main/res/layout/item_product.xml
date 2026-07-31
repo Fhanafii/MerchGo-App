@@ -31,6 +31,16 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?attr/textAppearanceTitleMedium" />
 
+            <ImageView
+                android:id="@+id/imageBarcode"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="@dimen/space_8"
+                android:adjustViewBounds="false"
+                android:background="@android:color/white"
+                android:contentDescription="@string/barcode"
+                android:scaleType="fitXY" />
+
             <TextView
                 android:id="@+id/textBarcode"
                 android:layout_width="match_parent"
@@ -39,11 +49,24 @@
                 android:textAppearance="?attr/textAppearanceBodyMedium" />
         </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/checkAvailable"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="@dimen/button_min_height"
-            android:text="@string/available" />
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:id="@+id/checkAvailable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/button_min_height"
+                android:text="@string/available" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progressAvailability"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone" />
+        </FrameLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

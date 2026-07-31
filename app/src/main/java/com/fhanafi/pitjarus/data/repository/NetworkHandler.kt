@@ -34,6 +34,10 @@ suspend fun <T> safeApiCall(call: suspend () -> Response<ApiResponse<T>>): Netwo
     }
 }
 
+fun NetworkResult<*>.isRetryableFailure(): Boolean {
+    return this is NetworkResult.Error && (code == null || code >= 500)
+}
+
 private data class ParsedError(val message: String, val errors: List<String>)
 
 private fun <T> parseError(response: Response<ApiResponse<T>>): ParsedError {

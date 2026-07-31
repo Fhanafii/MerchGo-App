@@ -2,6 +2,7 @@ package com.fhanafi.pitjarus.di
 
 import android.content.Context
 import androidx.room.Room
+import com.fhanafi.pitjarus.data.dao.PendingActionDao
 import com.fhanafi.pitjarus.data.dao.ProductDao
 import com.fhanafi.pitjarus.data.dao.PromoDao
 import com.fhanafi.pitjarus.data.dao.StoreDao
@@ -44,5 +45,10 @@ object DatabaseModule {
     @Provides
     fun providePromoDao(database: AppDatabase): PromoDao {
         return database.promoDao()
+    }
+
+    @Provides
+    fun providePendingActionDao(database: AppDatabase): PendingActionDao {
+        return database.pendingActionDao()
     }
 }

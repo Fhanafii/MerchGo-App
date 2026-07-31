@@ -25,7 +25,11 @@ import androidx.navigation.fragment.findNavController
 import com.fhanafi.pitjarus.R
 import com.fhanafi.pitjarus.data.repository.AttendanceType
 import com.fhanafi.pitjarus.databinding.FragmentAttendanceBinding
+import com.fhanafi.pitjarus.utils.UiState
+import com.fhanafi.pitjarus.utils.hideGlobalLoading
 import com.fhanafi.pitjarus.utils.ImageCompressor
+import com.fhanafi.pitjarus.utils.showGlobalLoading
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -98,6 +102,9 @@ class AttendanceFragment : Fragment() {
         binding.buttonCheckIn.setOnClickListener {
             requestAttendancePhoto(AttendanceType.CHECK_IN)
         }
+        binding.buttonContinueWorking.setOnClickListener {
+            findNavController().navigate(AttendanceFragmentDirections.actionAttendanceFragmentToStoreListFragment())
+        }
         binding.buttonCheckOut.setOnClickListener {
             requestAttendancePhoto(AttendanceType.CHECK_OUT)
         }
@@ -113,27 +120,36 @@ class AttendanceFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.checkedIn.collect { checkedIn ->
-                        updateButtons(checkedIn, viewModel.loading.value)
-                        binding.textStatus.text = getString(if (checkedIn) R.string.check_in else R.string.not_checked_in)
-                    }
-                }
-                launch {
-                    viewModel.loading.collect { loading ->
-                        updateButtons(viewModel.checkedIn.value, loading)
+                    viewModel.uiState.collect { state ->
+                        val loading = state.submitState is UiState.Loading
+                        updateButtons(state.session.checkedIn, loading)
+                        binding.textStatus.text = getString(
+                            if (state.session.checkedIn) R.string.checked_in else R.string.not_checked_in
+                        )
+                        binding.textStatus.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                if (state.session.checkedIn) R.color.success else R.color.error
+                            )
+                        )
+                        if (loading) {
+                            showGlobalLoading(state.loadingMessage ?: getString(R.string.loading))
+                        } else {
+                            hideGlobalLoading()
+                        }
                     }
                 }
                 launch {
                     viewModel.events.collect { event ->
                         when (event) {
                             is AttendanceEvent.Success -> {
-                                Toast.makeText(requireContext(), "Attendance berhasil dikirim", Toast.LENGTH_SHORT).show()
+                                Snackbar.make(binding.root, R.string.attendance_saved, Snackbar.LENGTH_SHORT).show()
                                 if (event.type == AttendanceType.CHECK_IN) {
                                     findNavController().navigate(AttendanceFragmentDirections.actionAttendanceFragmentToStoreListFragment())
                                 }
                             }
-                            is AttendanceEvent.Error -> Toast.makeText(requireContext(), event.message, Toast.LENGTH_SHORT).show()
-                            is AttendanceEvent.Unauthorized -> Toast.makeText(requireContext(), event.message, Toast.LENGTH_SHORT).show()
+                            is AttendanceEvent.Error -> Snackbar.make(binding.root, event.message, Snackbar.LENGTH_SHORT).show()
+                            is AttendanceEvent.Unauthorized -> Snackbar.make(binding.root, event.message, Snackbar.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -143,6 +159,8 @@ class AttendanceFragment : Fragment() {
 
     private fun updateButtons(checkedIn: Boolean, loading: Boolean) {
         binding.buttonCheckIn.isEnabled = !loading && !checkedIn
+        binding.buttonContinueWorking.visibility = if (checkedIn) View.VISIBLE else View.GONE
+        binding.buttonContinueWorking.isEnabled = !loading && checkedIn
         binding.buttonCheckOut.isEnabled = !loading && checkedIn
     }
 

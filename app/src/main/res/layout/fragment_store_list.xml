@@ -40,6 +40,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/space_16"
-        android:contentDescription="@string/refresh"
+        android:contentDescription="@string/add_store"
         android:src="@drawable/ic_store" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -17,4 +17,10 @@ interface StoreDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(stores: List<StoreEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(store: StoreEntity)
+
+    @Query("DELETE FROM stores WHERE id = :id")
+    suspend fun deleteById(id: Int)
 }

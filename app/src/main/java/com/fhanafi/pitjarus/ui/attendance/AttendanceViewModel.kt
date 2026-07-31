@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fhanafi.pitjarus.data.repository.AttendanceRepository
 import com.fhanafi.pitjarus.data.repository.AttendanceType
+import com.fhanafi.pitjarus.datastore.AttendanceSession
 import com.fhanafi.pitjarus.utils.NetworkResult
+import com.fhanafi.pitjarus.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,15 +24,14 @@ class AttendanceViewModel @Inject constructor(
     private val _events = MutableSharedFlow<AttendanceEvent>()
     val events: SharedFlow<AttendanceEvent> = _events.asSharedFlow()
 
-    private val _loading = MutableStateFlow(false)
-    val loading: StateFlow<Boolean> = _loading.asStateFlow()
-
-    private val _checkedIn = MutableStateFlow(false)
-    val checkedIn: StateFlow<Boolean> = _checkedIn.asStateFlow()
+    private val _uiState = MutableStateFlow(AttendanceUiState())
+    val uiState: StateFlow<AttendanceUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            attendanceRepository.checkedIn.collect { _checkedIn.value = it }
+            attendanceRepository.attendanceSession.collect { session ->
+                _uiState.value = _uiState.value.copy(session = session)
+            }
         }
     }
 
@@ -42,8 +43,12 @@ class AttendanceViewModel @Inject constructor(
         photoFileName: String,
         photoBase64: String
     ) {
+        if (_uiState.value.submitState is UiState.Loading) return
         viewModelScope.launch {
-            _loading.value = true
+            _uiState.value = _uiState.value.copy(
+                submitState = UiState.Loading,
+                loadingMessage = if (type == AttendanceType.CHECK_IN) "Checking in..." else "Checking out..."
+            )
             when (val result = attendanceRepository.submitAttendance(
                 type,
                 latitude,
@@ -53,8 +58,23 @@ class AttendanceViewModel @Inject constructor(
                 photoBase64
             )) {
                 is NetworkResult.Success -> {
-                    val checkedInAfterSubmit = type == AttendanceType.CHECK_IN
-                    attendanceRepository.saveCheckedIn(checkedInAfterSubmit)
+                    attendanceRepository.saveAttendanceSession(
+                        if (type == AttendanceType.CHECK_IN) {
+                            AttendanceSession(
+                                checkedIn = true,
+                                checkedOut = false,
+                                attendanceId = result.data.attendanceId,
+                                checkInTime = result.data.timestamp
+                            )
+                        } else {
+                            AttendanceSession(
+                                checkedIn = false,
+                                checkedOut = true,
+                                attendanceId = null,
+                                checkInTime = null
+                            )
+                        }
+                    )
                     _events.emit(AttendanceEvent.Success(type))
                 }
                 is NetworkResult.Error -> _events.emit(AttendanceEvent.Error(result.message))
@@ -62,10 +82,16 @@ class AttendanceViewModel @Inject constructor(
                 is NetworkResult.Unauthorized -> _events.emit(AttendanceEvent.Unauthorized(result.message))
                 NetworkResult.Loading -> Unit
             }
-            _loading.value = false
+            _uiState.value = _uiState.value.copy(submitState = UiState.Idle, loadingMessage = null)
         }
     }
 }
+
+data class AttendanceUiState(
+    val session: AttendanceSession = AttendanceSession(),
+    val submitState: UiState<Unit> = UiState.Idle,
+    val loadingMessage: String? = null
+)
 
 sealed class AttendanceEvent {
     data class Success(val type: AttendanceType) : AttendanceEvent()
