@@ -5,15 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.fhanafi.pitjarus.databinding.FragmentSplashBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SplashFragment : Fragment() {
     private var _binding: FragmentSplashBinding? = null
     private val binding get() = requireNotNull(_binding)
+    private val viewModel: SplashViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +32,11 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewLifecycleOwner.lifecycleScope.launch {
             delay(1_000)
-            findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
+            if (viewModel.isLoggedIn.first()) {
+                findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToAttendanceFragment())
+            } else {
+                findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
+            }
         }
     }
 
