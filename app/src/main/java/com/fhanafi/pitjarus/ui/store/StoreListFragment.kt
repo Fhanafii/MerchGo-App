@@ -5,19 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fhanafi.pitjarus.R
 import com.fhanafi.pitjarus.databinding.FragmentStoreListBinding
-import com.fhanafi.pitjarus.ui.model.StoreUiModel
+import com.fhanafi.pitjarus.utils.UiState
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class StoreListFragment : Fragment() {
     private var _binding: FragmentStoreListBinding? = null
     private val binding get() = requireNotNull(_binding)
-    private lateinit var viewModel: StoreViewModel
+    private val viewModel: StoreViewModel by viewModels()
     private val adapter = StoreAdapter {
-        findNavController().navigate(StoreListFragmentDirections.actionStoreListFragmentToStoreDetailFragment())
+        findNavController().navigate(StoreListFragmentDirections.actionStoreListFragmentToStoreDetailFragment(it.id))
     }
 
     override fun onCreateView(
@@ -30,11 +36,22 @@ class StoreListFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this)[StoreViewModel::class.java]
         setupToolbar()
         setupRecyclerView()
+        observeState()
         binding.searchView.queryHint = getString(R.string.search_store)
-        binding.fabRefresh.setOnClickListener { adapter.submitList(dummyStores()) }
+        binding.searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.search(query.orEmpty())
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.search(newText.orEmpty())
+                return true
+            }
+        })
+        binding.fabRefresh.setOnClickListener { viewModel.refresh() }
     }
 
     private fun setupToolbar() = with(binding.toolbar) {
@@ -46,30 +63,22 @@ class StoreListFragment : Fragment() {
     private fun setupRecyclerView() = with(binding.recyclerStores) {
         layoutManager = LinearLayoutManager(requireContext())
         adapter = this@StoreListFragment.adapter
-        this@StoreListFragment.adapter.submitList(dummyStores())
     }
 
-    private fun dummyStores(): List<StoreUiModel> {
-        return listOf(
-            StoreUiModel(
-                1,
-                getString(R.string.dummy_store_name),
-                getString(R.string.dummy_store_code),
-                getString(R.string.dummy_store_address)
-            ),
-            StoreUiModel(
-                2,
-                getString(R.string.dummy_store_two_name),
-                getString(R.string.dummy_store_two_code),
-                getString(R.string.dummy_store_two_address)
-            ),
-            StoreUiModel(
-                3,
-                getString(R.string.dummy_store_three_name),
-                getString(R.string.dummy_store_three_code),
-                getString(R.string.dummy_store_three_address)
-            )
-        )
+    private fun observeState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    when (state) {
+                        is UiState.Success -> adapter.submitList(state.data)
+                        UiState.Empty -> adapter.submitList(emptyList())
+                        is UiState.Error -> android.widget.Toast.makeText(requireContext(), state.message, android.widget.Toast.LENGTH_SHORT).show()
+                        is UiState.Unauthorized -> android.widget.Toast.makeText(requireContext(), state.message, android.widget.Toast.LENGTH_SHORT).show()
+                        else -> Unit
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

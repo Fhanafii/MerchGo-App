@@ -5,15 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.fhanafi.pitjarus.R
 import com.fhanafi.pitjarus.databinding.FragmentStoreDetailBinding
+import com.fhanafi.pitjarus.utils.UiState
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class StoreDetailFragment : Fragment() {
     private var _binding: FragmentStoreDetailBinding? = null
     private val binding get() = requireNotNull(_binding)
-    private lateinit var viewModel: StoreDetailViewModel
+    private val viewModel: StoreDetailViewModel by viewModels()
+    private val args: StoreDetailFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,14 +34,14 @@ class StoreDetailFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this)[StoreDetailViewModel::class.java]
         setupToolbar()
-        bindStoreInformation()
+        observeState()
+        viewModel.loadStore(args.storeId)
         binding.cardProduct.setOnClickListener {
-            findNavController().navigate(StoreDetailFragmentDirections.actionStoreDetailFragmentToProductFragment())
+            findNavController().navigate(StoreDetailFragmentDirections.actionStoreDetailFragmentToProductFragment(args.storeId))
         }
         binding.cardPromo.setOnClickListener {
-            findNavController().navigate(StoreDetailFragmentDirections.actionStoreDetailFragmentToPromoFragment())
+            findNavController().navigate(StoreDetailFragmentDirections.actionStoreDetailFragmentToPromoFragment(args.storeId))
         }
     }
 
@@ -42,10 +51,18 @@ class StoreDetailFragment : Fragment() {
         setNavigationOnClickListener { findNavController().navigateUp() }
     }
 
-    private fun bindStoreInformation() = with(binding) {
-        textStoreName.text = getString(R.string.dummy_store_name)
-        textStoreCode.text = getString(R.string.dummy_store_code)
-        textStoreAddress.text = getString(R.string.dummy_store_address)
+    private fun observeState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    if (state is UiState.Success) {
+                        binding.textStoreName.text = state.data.name
+                        binding.textStoreCode.text = state.data.code
+                        binding.textStoreAddress.text = state.data.address
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
