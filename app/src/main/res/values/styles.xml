@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.Pitjarus.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">@dimen/corner_radius</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="contentPadding">@dimen/space_16</item>
+    </style>
+
+    <style name="Widget.Pitjarus.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">@dimen/button_min_height</item>
+        <item name="cornerRadius">@dimen/corner_radius</item>
+    </style>
+
+    <style name="Widget.Pitjarus.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">@dimen/button_min_height</item>
+        <item name="cornerRadius">@dimen/corner_radius</item>
+    </style>
+</resources>
