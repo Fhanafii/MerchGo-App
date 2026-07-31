@@ -9,15 +9,14 @@ import com.fhanafi.pitjarus.R
 import com.fhanafi.pitjarus.databinding.ItemProductBinding
 import com.fhanafi.pitjarus.ui.model.ProductUiModel
 
-class ProductAdapter : ListAdapter<ProductUiModel, ProductAdapter.ProductViewHolder>(DiffCallback) {
+class ProductAdapter(
+    private val onAvailabilityChanged: (ProductUiModel, Boolean) -> Unit
+) : ListAdapter<ProductUiModel, ProductAdapter.ProductViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(binding) { product ->
-            val updatedList = currentList.map {
-                if (it.id == product.id) it.copy(isAvailable = !it.isAvailable) else it
-            }
-            submitList(updatedList)
+        return ProductViewHolder(binding) { product, available ->
+            onAvailabilityChanged(product, available)
         }
     }
 
@@ -27,14 +26,14 @@ class ProductAdapter : ListAdapter<ProductUiModel, ProductAdapter.ProductViewHol
 
     class ProductViewHolder(
         private val binding: ItemProductBinding,
-        private val onAvailabilityClick: (ProductUiModel) -> Unit
+        private val onAvailabilityClick: (ProductUiModel, Boolean) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ProductUiModel) = with(binding) {
             textProductName.text = item.name
             textBarcode.text = root.context.getString(R.string.barcode_format, item.barcode)
             checkAvailable.setOnCheckedChangeListener(null)
             checkAvailable.isChecked = item.isAvailable
-            checkAvailable.setOnClickListener { onAvailabilityClick(item) }
+            checkAvailable.setOnClickListener { onAvailabilityClick(item, checkAvailable.isChecked) }
         }
     }
 

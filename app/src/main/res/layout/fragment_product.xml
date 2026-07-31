@@ -20,4 +20,12 @@
         android:layout_marginTop="@dimen/space_8"
         android:layout_weight="1"
         android:clipToPadding="false" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSubmitProduct"
+        style="@style/Widget.Pitjarus.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_12"
+        android:text="@string/save" />
 </LinearLayout>
