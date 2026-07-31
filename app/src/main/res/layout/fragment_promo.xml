@@ -46,4 +46,15 @@
         android:layout_margin="@dimen/space_16"
         android:contentDescription="@string/add_promo"
         android:src="@drawable/ic_promo" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSubmitPromo"
+        style="@style/Widget.Pitjarus.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/space_16"
+        android:layout_marginEnd="@dimen/space_88"
+        android:layout_marginBottom="@dimen/space_16"
+        android:text="@string/save" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
