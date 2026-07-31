@@ -15,8 +15,11 @@
     <string name="not_checked_in">Not Checked In</string>
     <string name="check_in">Check In</string>
     <string name="check_out">Check Out</string>
+    <string name="select_attendance_photo">Select Attendance Photo</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="choose_from_gallery">Choose from Gallery</string>
     <string name="current_location">Current Location</string>
-    <string name="location_placeholder">Location will be captured in the next phase</string>
+    <string name="location_placeholder">Location is captured from device GPS during attendance.</string>
     <string name="store_list_title">Store List</string>
     <string name="search_store">Search store</string>
     <string name="refresh">Refresh</string>
@@ -42,19 +45,4 @@
     <string name="open_store_detail">Open store detail</string>
     <string name="barcode_format">Barcode: %1$s</string>
     <string name="promo_price_format">%1$s to %2$s</string>
-    <string name="dummy_store_name">Pitjarus Mart Sudirman</string>
-    <string name="dummy_store_code">STR-001</string>
-    <string name="dummy_store_address">Jl. Jenderal Sudirman No. 12, Jakarta</string>
-    <string name="dummy_store_two_name">Pitjarus Mart Kemang</string>
-    <string name="dummy_store_two_code">STR-002</string>
-    <string name="dummy_store_two_address">Jl. Kemang Raya No. 8, Jakarta</string>
-    <string name="dummy_store_three_name">Pitjarus Mart Bandung</string>
-    <string name="dummy_store_three_code">STR-003</string>
-    <string name="dummy_store_three_address">Jl. Asia Afrika No. 21, Bandung</string>
-    <string name="dummy_product_one">Keripik Kentang Xie-xie 250mL</string>
-    <string name="dummy_product_two">Biskuit Kelapa Ni-hao 100mL</string>
-    <string name="dummy_product_three">Coklat Kacang Peng-you 50mL</string>
-    <string name="dummy_product_one_barcode">899100100250</string>
-    <string name="dummy_product_two_barcode">899100100100</string>
-    <string name="dummy_product_three_barcode">899100100050</string>
 </resources>

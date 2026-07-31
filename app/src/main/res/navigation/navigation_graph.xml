@@ -15,6 +15,13 @@
             app:exitAnim="@android:anim/fade_out"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashFragment_to_attendanceFragment"
+            app:destination="@id/attendanceFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -56,6 +63,9 @@
         android:id="@+id/storeDetailFragment"
         android:name="com.fhanafi.pitjarus.ui.detail.StoreDetailFragment"
         android:label="@string/store_detail_title">
+        <argument
+            android:name="storeId"
+            app:argType="integer" />
         <action
             android:id="@+id/action_storeDetailFragment_to_productFragment"
             app:destination="@id/productFragment"
@@ -71,10 +81,18 @@
     <fragment
         android:id="@+id/productFragment"
         android:name="com.fhanafi.pitjarus.ui.product.ProductFragment"
-        android:label="@string/product_title" />
+        android:label="@string/product_title">
+        <argument
+            android:name="storeId"
+            app:argType="integer" />
+    </fragment>
 
     <fragment
         android:id="@+id/promoFragment"
         android:name="com.fhanafi.pitjarus.ui.promo.PromoFragment"
-        android:label="@string/promo_title" />
+        android:label="@string/promo_title">
+        <argument
+            android:name="storeId"
+            app:argType="integer" />
+    </fragment>
 </navigation>
