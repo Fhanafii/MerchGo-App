@@ -2,10 +2,79 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/navigation_placeholder">
+    app:startDestination="@id/splashFragment">
 
     <fragment
-        android:id="@+id/navigation_placeholder"
-        android:name="androidx.fragment.app.Fragment"
-        android:label="@string/app_name" />
+        android:id="@+id/splashFragment"
+        android:name="com.fhanafi.pitjarus.ui.splash.SplashFragment"
+        android:label="@string/app_name">
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.fhanafi.pitjarus.ui.login.LoginFragment"
+        android:label="@string/login_title">
+        <action
+            android:id="@+id/action_loginFragment_to_attendanceFragment"
+            app:destination="@id/attendanceFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/attendanceFragment"
+        android:name="com.fhanafi.pitjarus.ui.attendance.AttendanceFragment"
+        android:label="@string/attendance_title">
+        <action
+            android:id="@+id/action_attendanceFragment_to_storeListFragment"
+            app:destination="@id/storeListFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/storeListFragment"
+        android:name="com.fhanafi.pitjarus.ui.store.StoreListFragment"
+        android:label="@string/store_list_title">
+        <action
+            android:id="@+id/action_storeListFragment_to_storeDetailFragment"
+            app:destination="@id/storeDetailFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/storeDetailFragment"
+        android:name="com.fhanafi.pitjarus.ui.detail.StoreDetailFragment"
+        android:label="@string/store_detail_title">
+        <action
+            android:id="@+id/action_storeDetailFragment_to_productFragment"
+            app:destination="@id/productFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_storeDetailFragment_to_promoFragment"
+            app:destination="@id/promoFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="com.fhanafi.pitjarus.ui.product.ProductFragment"
+        android:label="@string/product_title" />
+
+    <fragment
+        android:id="@+id/promoFragment"
+        android:name="com.fhanafi.pitjarus.ui.promo.PromoFragment"
+        android:label="@string/promo_title" />
 </navigation>
