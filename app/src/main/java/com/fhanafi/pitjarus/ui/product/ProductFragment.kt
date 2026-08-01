@@ -33,6 +33,8 @@ class ProductFragment : Fragment() {
     private var addProductBinding: BottomSheetAddProductBinding? = null
     private val adapter = ProductAdapter { product, available ->
         viewModel.updateAvailability(args.storeId, product.id, available)
+        binding.buttonSubmitProduct.visibility = View.VISIBLE
+        binding.fabAddProduct.visibility = View.GONE
     }
 
     override fun onCreateView(
@@ -72,10 +74,12 @@ class ProductFragment : Fragment() {
                         when (state) {
                             is UiState.Success -> {
                                 adapter.submitList(state.data)
+                                binding.emptyState.root.visibility = View.GONE
                                 hideGlobalLoading()
                             }
                             UiState.Empty -> {
                                 adapter.submitList(emptyList())
+                                binding.emptyState.root.visibility = View.VISIBLE
                                 hideGlobalLoading()
                             }
                             UiState.Loading -> showGlobalLoading("Loading products...")
@@ -97,7 +101,12 @@ class ProductFragment : Fragment() {
                         binding.fabAddProduct.isEnabled = state !is UiState.Loading
                         if (state is UiState.Loading) showGlobalLoading("Saving availability...")
                         if (state !is UiState.Loading) hideGlobalLoading()
-                        if (state is UiState.Success) Snackbar.make(binding.root, "Product report berhasil dikirim", Snackbar.LENGTH_SHORT).show()
+                        if (state is UiState.Success){
+                            Snackbar.make(binding.root, "Product report berhasil dikirim", Snackbar.LENGTH_SHORT).show()
+
+                            binding.buttonSubmitProduct.visibility = View.GONE
+                            binding.fabAddProduct.visibility = View.VISIBLE
+                        }
                         if (state is UiState.Error) Snackbar.make(binding.root, state.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }

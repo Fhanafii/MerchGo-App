@@ -22,6 +22,7 @@
             style="@style/Widget.Pitjarus.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/card_background"
             android:layout_marginTop="@dimen/space_16">
 
             <LinearLayout
@@ -107,6 +108,7 @@
             style="@style/Widget.Pitjarus.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/card_background"
             android:layout_marginTop="@dimen/space_16">
 
             <LinearLayout

@@ -14,8 +14,8 @@
     <string name="today_date">Today\'s Date</string>
     <string name="current_time">Current Time</string>
     <string name="status">Status</string>
-    <string name="not_checked_in">Not Checked In</string>
-    <string name="checked_in">Checked In</string>
+    <string name="not_checked_in">Belum Absen</string>
+    <string name="checked_in">Sudah Absen</string>
     <string name="check_in">Check In</string>
     <string name="continue_working">Continue Working</string>
     <string name="check_out">Check Out</string>
@@ -27,7 +27,7 @@
     <string name="current_location">Current Location</string>
     <string name="location_placeholder">Location is captured from device GPS during attendance.</string>
     <string name="store_list_title">Store List</string>
-    <string name="search_store">Search store</string>
+    <string name="search_store">Cari Toko</string>
     <string name="refresh">Refresh</string>
     <string name="store_name">Store Name</string>
     <string name="store_code">Store Code</string>
@@ -53,6 +53,8 @@
     <string name="available">Available</string>
     <string name="no_promo_available">No Promo Available</string>
     <string name="no_promo_description">Promotions added for this store will appear here.</string>
+    <string name="no_product_available">No Product Available</string>
+    <string name="no_product_description">Product added for this store will appear here.</string>
     <string name="add_promo">Add Promo</string>
     <string name="saving_promo">Saving promo...</string>
     <string name="no_products_available">No products available.</string>

@@ -39,13 +39,13 @@ interface ApiService {
         @Query("limit") limit: Int = 20
     ): Response<ApiResponse<List<ProductDto>>>
 
-    @POST("v1/product")
+    @POST("v1/products")
     suspend fun createProduct(@Body request: CreateProductRequest): Response<ApiResponse<ProductDto>>
 
     @GET("v1/stores/{storeId}/products")
     suspend fun getStoreProducts(@Path("storeId") storeId: Int): Response<ApiResponse<List<ProductDto>>>
 
-    @POST("v1/{storeId}/products")
+    @POST("v1/stores/{storeId}/products")
     suspend fun assignProductsToStore(
         @Path("storeId") storeId: Int,
         @Body request: AssignProductRequest

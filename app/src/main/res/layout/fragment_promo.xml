@@ -45,7 +45,10 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/space_16"
         android:contentDescription="@string/add_promo"
-        android:src="@drawable/ic_promo" />
+        android:src="@drawable/ic_promofab"
+        app:backgroundTint="@color/primary"
+        app:tint="@null"
+        />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonSubmitPromo"
@@ -56,5 +59,6 @@
         android:layout_marginStart="@dimen/space_16"
         android:layout_marginEnd="@dimen/space_88"
         android:layout_marginBottom="@dimen/space_16"
+        android:visibility="gone"
         android:text="@string/save" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

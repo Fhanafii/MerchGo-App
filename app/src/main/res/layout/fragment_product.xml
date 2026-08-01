@@ -17,30 +17,50 @@
             android:layout_height="wrap_content"
             app:title="@string/product_title" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerProducts"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/space_8"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:paddingBottom="@dimen/space_88" />
+            android:layout_weight="1">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonSubmitProduct"
-            style="@style/Widget.Pitjarus.Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_12"
-            android:text="@string/save" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerProducts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="@dimen/space_88" />
+
+            <include
+                android:id="@+id/emptyState"
+                layout="@layout/layout_product_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
     </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSubmitProduct"
+        style="@style/Widget.Pitjarus.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/space_16"
+        android:visibility="gone"
+        android:text="@string/save" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddProduct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/space_16"
+        android:layout_marginEnd="@dimen/space_16"
+        android:layout_marginBottom="@dimen/space_88"
         android:contentDescription="@string/add_product"
-        android:src="@drawable/ic_inventory" />
+        app:backgroundTint="@color/primary"
+        app:tint="@null"
+        android:visibility="visible"
+        android:src="@drawable/ic_inventoryfab" />
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
