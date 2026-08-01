@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 1. Lapisan Paling Bawah: Warna hijau solid untuk seluruh layar -->
+    <item>
+        <color android:color="#2FCD4C" />
+    </item>
+
+    <!-- 2. Lapisan Atas: Gambar mockup Anda diletakkan di area atas -->
+    <item android:drawable="@drawable/phonebg"
+        android:gravity="top|fill_horizontal"
+        android:bottom="200dp" />
+
+</layer-list>

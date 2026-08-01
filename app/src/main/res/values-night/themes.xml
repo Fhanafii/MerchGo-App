@@ -4,7 +4,7 @@
         <item name="colorSecondary">@color/secondary</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="colorError">@color/error</item>
-        <item name="android:fontFamily">sans</item>
+        <item name="android:fontFamily">sans-serif</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>
