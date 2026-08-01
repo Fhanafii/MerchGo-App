@@ -1,8 +1,20 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.navigation.safe.args)
+}
+
+val keystoreProperties = Properties()
+
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(
+        keystorePropertiesFile.inputStream()
+    )
 }
 
 android {
@@ -23,6 +35,25 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+
+        create("release") {
+
+            storeFile = rootProject.file(
+                keystoreProperties["STORE_FILE"] as String
+            )
+
+            storePassword =
+                keystoreProperties["STORE_PASSWORD"] as String
+
+            keyAlias =
+                keystoreProperties["KEY_ALIAS"] as String
+
+            keyPassword =
+                keystoreProperties["KEY_PASSWORD"] as String
+        }
+    }
+
     buildTypes {
         debug {
             buildConfigField(
@@ -32,6 +63,7 @@ android {
             )
         }
         release {
+            signingConfig = signingConfigs.getByName("release")
             buildConfigField(
                 "String",
                 "BASE_URL",

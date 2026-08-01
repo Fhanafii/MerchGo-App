@@ -39,3 +39,8 @@ Thumbs.db
 
 # Docs codex
 docs/codex
+merchgo-release.jks
+merchgo-release.base64
+*.jks
+*.keystore
+keystore.properties
