@@ -2,7 +2,10 @@ package com.fhanafi.pitjarus.di
 
 import android.content.Context
 import androidx.room.Room
-import com.fhanafi.pitjarus.data.dao.PlaceholderDao
+import com.fhanafi.pitjarus.data.dao.PendingActionDao
+import com.fhanafi.pitjarus.data.dao.ProductDao
+import com.fhanafi.pitjarus.data.dao.PromoDao
+import com.fhanafi.pitjarus.data.dao.StoreDao
 import com.fhanafi.pitjarus.data.database.AppDatabase
 import com.fhanafi.pitjarus.utils.Constants
 import dagger.Module
@@ -24,11 +27,28 @@ object DatabaseModule {
             context,
             AppDatabase::class.java,
             Constants.DATABASE_NAME
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides
-    fun providePlaceholderDao(database: AppDatabase): PlaceholderDao {
-        return database.placeholderDao()
+    fun provideStoreDao(database: AppDatabase): StoreDao {
+        return database.storeDao()
+    }
+
+    @Provides
+    fun provideProductDao(database: AppDatabase): ProductDao {
+        return database.productDao()
+    }
+
+    @Provides
+    fun providePromoDao(database: AppDatabase): PromoDao {
+        return database.promoDao()
+    }
+
+    @Provides
+    fun providePendingActionDao(database: AppDatabase): PendingActionDao {
+        return database.pendingActionDao()
     }
 }

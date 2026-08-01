@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/space_16">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_promo"
+        android:textAppearance="?attr/textAppearanceTitleLarge" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputProductName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_16"
+        android:hint="@string/product_title"
+        app:endIconMode="dropdown_menu">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/dropdownProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/textNoProducts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_8"
+        android:text="@string/no_products_available"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="@color/error"
+        android:visibility="gone" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputNormalPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_12"
+        android:hint="@string/normal_price">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputPromoPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_12"
+        android:hint="@string/promo_price">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_24"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonCancel"
+            style="@style/Widget.Pitjarus.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonSave"
+            style="@style/Widget.Pitjarus.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_8"
+            android:text="@string/save" />
+    </LinearLayout>
+</LinearLayout>

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.navigation.safe.args)
 }
 
 android {
@@ -16,8 +17,8 @@ android {
         applicationId = "com.fhanafi.pitjarus"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = providers.gradleProperty("VERSION_CODE").get().toInt()
+        versionName = providers.gradleProperty("VERSION_NAME").get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -42,8 +43,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+    kotlin {
+        jvmToolchain(21)
     }
 
     buildFeatures {
@@ -56,6 +60,7 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.coordinatorlayout)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.recyclerview)
     implementation(libs.material)
@@ -66,6 +71,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
 
     implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 
     implementation(libs.retrofit)
@@ -75,7 +81,9 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.fragment)
+    implementation(libs.androidx.hilt.work)
     ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
@@ -85,6 +93,7 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.coil)
     implementation(libs.timber)
+    implementation(libs.zxing.core)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.Pitjarus.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="@dimen/space_4">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/space_16">
+
+        <ImageView
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:contentDescription="@string/product_title"
+            android:src="@drawable/ic_inventory" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_16"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textProductName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+            <ImageView
+                android:id="@+id/imageBarcode"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="@dimen/space_8"
+                android:adjustViewBounds="false"
+                android:background="@android:color/white"
+                android:contentDescription="@string/barcode"
+                android:scaleType="fitXY" />
+
+            <TextView
+                android:id="@+id/textBarcode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4"
+                android:textAppearance="?attr/textAppearanceBodyMedium" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:id="@+id/checkAvailable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/button_min_height"
+                android:text="@string/available" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progressAvailability"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone" />
+        </FrameLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:app="http://android.com">
+    <!-- Font Regular -->
+    <font
+        app:font="@font/plus_jakarta_sans_regular"
+        app:fontStyle="normal"
+        app:fontWeight="400" />
+
+    <!-- Font Bold -->
+    <font
+        app:font="@font/plus_jakarta_sans_bold"
+        app:fontStyle="normal"
+        app:fontWeight="700" />
+
+    <!-- Font Semi Bold -->
+    <font
+        app:font="@font/plus_jakarta_sans_semi_bold"
+        app:fontStyle="normal"
+        app:fontWeight="700" />
+
+    !-- Font Extra Bold -->
+    <font
+        app:font="@font/plus_jakarta_sans_extra_bold"
+        app:fontStyle="normal"
+        app:fontWeight="700" />
+</font-family>

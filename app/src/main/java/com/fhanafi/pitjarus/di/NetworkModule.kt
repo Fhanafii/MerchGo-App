@@ -3,6 +3,8 @@ package com.fhanafi.pitjarus.di
 import com.fhanafi.pitjarus.data.api.ApiInterceptor
 import com.fhanafi.pitjarus.data.api.ApiService
 import com.fhanafi.pitjarus.data.api.RetrofitClient
+import com.fhanafi.pitjarus.BuildConfig
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,9 +18,19 @@ import javax.inject.Singleton
 object NetworkModule {
     @Provides
     @Singleton
+    fun provideGson(): Gson {
+        return Gson()
+    }
+
+    @Provides
+    @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
         }
     }
 
