@@ -33,9 +33,18 @@ jobs:
 
       - name: Grant execute permission
         run: chmod +x gradlew
-
+        
+      - name: Print Android Environment
+        run: |
+          java -version
+          ./gradlew --version
+          sdkmanager --list | grep "platforms;android"
+          
       - name: Build Release APK
-        run: ./gradlew assembleRelease
+        run: |
+          ./gradlew clean assembleRelease \
+            --stacktrace \
+            --info
 
       ##########################################################
       ## Generate Next Semantic Version
