@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Pitjarus</string>
+    <string name="app_name">MerchGo</string>
     <string name="app_logo_description">Pitjarus logo</string>
     <string name="splash_loading">Preparing application</string>
     <string name="login_title">Login</string>
