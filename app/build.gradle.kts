@@ -43,8 +43,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+    kotlin {
+        jvmToolchain(21)
     }
 
     buildFeatures {
@@ -68,6 +71,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
 
     implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 
     implementation(libs.retrofit)
