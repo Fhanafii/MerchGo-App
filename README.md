@@ -35,6 +35,23 @@ The application is designed using **Offline First Architecture**, ensuring users
 
 ---
 
+# 📸 App Showcase
+
+<table>
+  <tr>
+    <td align="center"><b>Splash Screen</b><br/><img src="docs/images/Splash%20Screen.png" width="220" alt="Splash Screen"/></td>
+    <td align="center"><b>Loading Screen</b><br/><img src="docs/images/Loading%20Screen.png" width="220" alt="Loading Screen"/></td>
+    <td align="center"><b>Attendance</b><br/><img src="docs/images/Absen%20Scren.png"   width="220" alt="Attendance Screen"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Absen Berhasil</b><br/><img src="docs/images/Absen%20berhasil.png" width="220" alt="Absen Berhasil"/></td>
+    <td align="center"><b>Store List</b><br/><img src="docs/images/Store%20List%20Screen.png" width="220" alt="Store List Screen"/></td>
+    <td align="center"><b>Store Detail</b><br/><img src="docs/images/Store%20Detail.png" width="220" alt="Store Detail"/></td>
+  </tr>
+</table>
+
+---
+
 # ✨ Features
 
 ## Authentication
