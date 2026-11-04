@@ -79,7 +79,7 @@ The UI reads local state through repositories, so cached data remains available 
 ### Build and launch
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Fhanafii/MerchGo-App.git
 cd MerchGo-App
 ./gradlew assembleDebug
 ```
@@ -95,9 +95,14 @@ Open the project in Android Studio and run the `app` configuration on a device o
 
 Use this account to try the app:
 
-| Username | Password |
-| --- | --- |
-| `fajar` | `123456` |
+Username :
+```
+fajar
+```
+Password :
+````
+123456
+````
 
 ## Project layout
 
