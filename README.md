@@ -91,6 +91,14 @@ Open the project in Android Studio and run the `app` configuration on a device o
 - [Interactive API documentation](https://dev-api.fhanafii.my.id/docs)
 - [OpenAPI specification](https://dev-api.fhanafii.my.id/openapi.json)
 
+## Demo account
+
+Use this account to try the app:
+
+| Username | Password |
+| --- | --- |
+| `fajar` | `123456` |
+
 ## Project layout
 
 ```text
